@@ -21,6 +21,7 @@
 #define REG2_WRITE                 0b00000010
 #define PC_COUNT_WRITE             0b00000100
 #define FLAGS_WRITE                0b00001000
+#define MEMORY_WRITE               0b00010000
 
 
 
@@ -46,8 +47,8 @@ uint8_t microcode[256][3] = {
 	{ 0, 0, 0 }, // JZR <reg>
 	{ DATA_BUS_TO_REG_WRITE_DATA, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, REG1_WRITE }, // LDR <reg> <imm16>
 	{ REG2_READ | DATA_BUS_TO_REG_WRITE_DATA, REG2_TO_ADDRESS_BUS, REG1_WRITE }, // LDR <reg> <reg>
-	{ 0, 0, 0 }, // WTR <reg> <imm16>
-	{ 0, 0, 0 }, // WTR <reg> <reg> 
+	{ REG1_READ, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, MEMORY_WRITE }, // WTR <reg> <imm16>
+	{ REG1_READ | REG2_READ, REG2_TO_ADDRESS_BUS, MEMORY_WRITE }, // WTR <reg> <reg> 
 	{ 0, 0, 0 }, // SWP <reg>
 	{ 0, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, PC_COUNT_WRITE }, // JMP <imm16>
 	{ REG2_READ, REG2_TO_ADDRESS_BUS, PC_COUNT_WRITE }, // JMP <reg>
