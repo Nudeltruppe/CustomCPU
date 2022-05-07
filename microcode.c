@@ -18,7 +18,7 @@
 #define ALU_COMPARE                0b00010000
 #define ALU_SWAP                   0b00100000
 #define COND_INVERT                0b01000000
-
+#define IO_READ                    0b10000000
 
 #define REG1_WRITE                 0b00000001
 #define REG2_WRITE                 0b00000010
@@ -27,14 +27,14 @@
 #define MEMORY_WRITE               0b00010000
 #define PC_COUNT_LOAD_ZERO         0b00100000
 #define PC_COUNT_LOAD_EQ           0b01000000
-
+#define IO_WRITE                   0b10000000
 
 uint8_t microcode[256][3] = {
 	{ 0, 0, 0 }, // NOP
 	{ REG2_READ | REG2_TO_REG_WRITE_DATA, 0, REG1_WRITE }, // MOV <reg> <reg>
 	{ IMM16_TO_REG_WRITE_DATA, 0, REG1_WRITE }, // MOV <reg> <imm16>
-	{ 0, 0, 0 }, // OUT <imm16> <reg>
-	{ 0, 0, 0 }, // INP <imm16> <reg>
+	{ REG1_READ | REG1_TO_REG_WRITE_DATA, IMM16_TO_REG2_DATA, IO_WRITE }, // OUT <imm16> <reg>
+	{ 0, IMM16_TO_REG2_DATA, REG1_READ }, // INP <imm16> <reg>
 	{ 0, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS | COND_INVERT, PC_COUNT_LOAD_ZERO }, // JNZ <imm16>
 	{ REG2_READ, REG2_TO_ADDRESS_BUS | COND_INVERT, PC_COUNT_LOAD_ZERO }, // JNZ <reg>
 	{ REG1_READ | REG2_READ | ALU_ADD, 0, REG1_WRITE }, // ADD <reg> <reg>
