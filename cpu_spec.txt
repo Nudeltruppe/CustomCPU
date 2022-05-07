@@ -1,0 +1,88 @@
+=== OVERVIEW ===
+
+- 16 bit data width
+- memory banking with a special register (up to 256 memory banks)
+- has dedicated io ports
+
+=== INSTRUCTIONS ===
+0x00: NOP
+
+0x01: MOV <reg>, <reg>   -> move register into another register
+
+0x02: LOD <reg>, <imm16> -> load 16 bit constant into register
+
+0x03: OUT <imm16> <reg>  -> output reg to imm16
+0x04: INP <imm16> <reg>  -> input imm16 to reg
+
+0x05: JNZ <imm16>        -> jump to imm16 if nz is set
+0x06: JNZ <reg>          -> jump to register if nz is set
+
+0x07: ADD <reg> <reg>    -> add register into register and store the result into the left register
+0x08: ADD <reg> <imm16>  -> add const 16 bit value to register and store in reg
+
+0x09: SUB <reg> <reg>    -> subtract one register from another and save it to the left register
+0x0A: SUB <reg> <imm16>  -> sub imm16 from reg and store in reg
+
+0x0B: NAD <reg> <reg>    -> bitwise nand
+0x0C: NAD <reg> <imm16>  -> bitwise nand
+
+0x0D: NOR <reg> <reg>    -> bitwise nor
+0x0E: NOR <reg> <imm16>  -> bitwise nor
+
+0x0F: CMP <reg> <reg>    -> compare reg to reg store result in fg
+0x10: CMP <reg> <imm16>  -> compare reg to imm16 and store result in fg
+
+0x11: JZR <imm16>        -> jump to imm16 if zr flag is set
+0x12: JZR <reg>          -> jump to reg if zr flag is set
+
+0x13: LDR <reg> <imm16>  -> load one byte from address imm16 into reg
+0x14: LDR <reg> <reg>    -> load one byte from address reg into reg
+
+0x15: WTR <reg> <imm16>  -> writes one byte from register to address imm16 (upper byte is ignored) NOTE: the reg containing the address is insturction reg 2 
+0x16: WTR <reg> <reg>    -> writes one byte from register to address reg (upper byte is ignored) NOTE: the reg containing the address is insturction reg 2
+
+0x17: SWP <reg>          -> swap low and high byte
+
+0x18 JMP <imm16>         -> load imm16 into pc
+0x19 JMP <reg>           -> load reg into pc NOTE: reg needs to be encoded in the second instruction reg
+
+=== INSTRUCTION ENCODING ===
+A instruction has a fixed size of 32bit, and can never contain two imm16.
+
+00000000 0000 0000 0000000000000000
+
+first 8bit = instruction
+next 4bit  = first optional register
+next 4bit  = second optional register
+last 16bit = optional imm16
+
+=== REGISTERS ===
+The cpu contains three general purpose registers (r0-r2), one stack pointer (sp), as well as one flag register (fg), and two program counters (pc)
+
+0: r0 (16bit)
+1: r1 (16bit)
+2: r2 (16bit)
+
+12: sp (16 bit)
+
+14: fg (3bit)
+    -> bit 0: zero
+    -> bit 1: not zero
+    -> bit 2: eq
+    -> bit 3: not eq
+    -> bit 4: overflow
+15: pc (16bit)
+
+=== MEMORY LAYOUT ===
+0x0000 - 0x7fff = general purpose rom
+0x8000 - 0xbfff = general purpose ram
+0xc000 - 0xffff = banked general purpose ram / rom
+
+=== STARTUP ===
+Code execution starts at 0x0
+
+=== I/O ===
+The cpu contains 4 ports with 16 gpio pins addressed from 0 counting upwards, one io port will be used to set the memory bank
+
+=== STACK ===
+The stack will be implemented with assembly macros
