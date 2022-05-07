@@ -40,8 +40,8 @@ uint8_t microcode[256][3] = {
 	{ REG1_READ, ALU_NAND | IMM16_TO_REG2_DATA, REG1_WRITE }, // NAD <reg> <imm16>
 	{ REG1_READ | REG2_READ, ALU_NOR, REG1_WRITE }, // NOR <reg> <reg>
 	{ REG1_READ, ALU_NOR | IMM16_TO_REG2_DATA, REG1_WRITE }, // NOR <reg> <imm16>
-	{ 0, 0, 0 }, // CMP <reg> <reg>
-	{ 0, 0, 0 }, // CMP <reg> <imm16>
+	{ REG1_READ | REG2_READ, ALU_COMPARE, FLAGS_WRITE }, // CMP <reg> <reg>
+	{ REG1_READ, IMM16_TO_REG2_DATA | ALU_COMPARE, FLAGS_WRITE }, // CMP <reg> <imm16>
 	{ 0, 0, 0 }, // JZR <imm16> 
 	{ 0, 0, 0 }, // JZR <reg>
 	{ 0, 0, 0 }, // LDR <reg> <imm16>
