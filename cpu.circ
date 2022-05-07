@@ -92,12 +92,46 @@
     <comp lib="0" loc="(1000,1130)" name="Transistor"/>
     <comp lib="0" loc="(1000,1170)" name="Transistor"/>
     <comp lib="0" loc="(1000,1210)" name="Transistor"/>
+    <comp lib="0" loc="(1000,5120)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="cond_invert"/>
+    </comp>
+    <comp lib="0" loc="(1000,5160)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="pc_cound_cond_load_zero"/>
+    </comp>
+    <comp lib="0" loc="(1000,5300)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="flags_out"/>
+      <a name="width" val="5"/>
+    </comp>
+    <comp lib="0" loc="(1000,5340)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="cond_invert"/>
+    </comp>
+    <comp lib="0" loc="(1000,5380)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="pc_cound_cond_load_eq"/>
+    </comp>
+    <comp lib="0" loc="(1000,5520)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="flags_out"/>
+      <a name="width" val="5"/>
+    </comp>
     <comp lib="0" loc="(1000,930)" name="Transistor"/>
     <comp lib="0" loc="(1000,970)" name="Transistor"/>
     <comp lib="0" loc="(1020,4060)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="instruction_imm16"/>
       <a name="width" val="16"/>
+    </comp>
+    <comp lib="0" loc="(1020,5300)" name="Splitter">
+      <a name="fanout" val="5"/>
+      <a name="incoming" val="5"/>
+    </comp>
+    <comp lib="0" loc="(1020,5520)" name="Splitter">
+      <a name="fanout" val="5"/>
+      <a name="incoming" val="5"/>
     </comp>
     <comp lib="0" loc="(1020,920)" name="Splitter">
       <a name="facing" val="west"/>
@@ -145,10 +179,18 @@
       <a name="spacing" val="4"/>
     </comp>
     <comp lib="0" loc="(120,2670)" name="Clock"/>
+    <comp lib="0" loc="(1260,5230)" name="Transistor"/>
+    <comp lib="0" loc="(1260,5450)" name="Transistor"/>
     <comp lib="0" loc="(1270,4800)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="instruction_imm16"/>
       <a name="width" val="16"/>
+    </comp>
+    <comp lib="0" loc="(1290,5230)" name="Tunnel">
+      <a name="label" val="pc_count_load"/>
+    </comp>
+    <comp lib="0" loc="(1290,5450)" name="Tunnel">
+      <a name="label" val="pc_count_load"/>
     </comp>
     <comp lib="0" loc="(130,3780)" name="Tunnel">
       <a name="facing" val="east"/>
@@ -1737,6 +1779,9 @@
     <comp lib="0" loc="(570,4670)" name="Tunnel">
       <a name="label" val="alu_swp"/>
     </comp>
+    <comp lib="0" loc="(570,4710)" name="Tunnel">
+      <a name="label" val="cond_invert"/>
+    </comp>
     <comp lib="0" loc="(570,4790)" name="Tunnel">
       <a name="label" val="reg1_write"/>
     </comp>
@@ -1751,6 +1796,12 @@
     </comp>
     <comp lib="0" loc="(570,4950)" name="Tunnel">
       <a name="label" val="memory_write"/>
+    </comp>
+    <comp lib="0" loc="(570,4990)" name="Tunnel">
+      <a name="label" val="pc_cound_cond_load_zero"/>
+    </comp>
+    <comp lib="0" loc="(570,5030)" name="Tunnel">
+      <a name="label" val="pc_cound_cond_load_eq"/>
     </comp>
     <comp lib="0" loc="(580,1620)" name="Splitter">
       <a name="fanout" val="16"/>
@@ -2028,6 +2079,14 @@
     <comp lib="1" loc="(1090,4030)" name="NOT Gate">
       <a name="facing" val="north"/>
     </comp>
+    <comp lib="1" loc="(1190,5230)" name="XOR Gate"/>
+    <comp lib="1" loc="(1190,5450)" name="XOR Gate"/>
+    <comp lib="1" loc="(1240,5200)" name="NOT Gate">
+      <a name="facing" val="south"/>
+    </comp>
+    <comp lib="1" loc="(1240,5420)" name="NOT Gate">
+      <a name="facing" val="south"/>
+    </comp>
     <comp lib="1" loc="(1340,4770)" name="NOT Gate">
       <a name="facing" val="north"/>
     </comp>
@@ -2201,26 +2260,29 @@
     <comp lib="4" loc="(180,4400)" name="ROM">
       <a name="appearance" val="logisim_evolution"/>
       <a name="contents">addr/data: 8 8
-0 a 20 4*0 43 41 83 81
-3 1 3 1 3 1 0 0
-10 12 1 3 1 0 2
+0 a 20 0 0 0 2 43
+41 83 81 3 1 3 1 3
+1 0 2 10 12 1 3 1
+0 2 0 2 0 2
 </a>
       <a name="labelvisible" val="true"/>
     </comp>
     <comp lib="4" loc="(180,4720)" name="ROM">
       <a name="appearance" val="logisim_evolution"/>
       <a name="contents">addr/data: 8 8
-8*0 4 0 4 2 6 1 5
-10 14 0 0 c 8 c 8
-20 c 8
+5*0 4c 48 0 4 0 4 2
+6 1 5 10 14 c 8 c
+8 c 8 20 c 8 c 8
+4c 48
 </a>
       <a name="labelvisible" val="true"/>
     </comp>
     <comp lib="4" loc="(180,5040)" name="ROM">
       <a name="appearance" val="logisim_evolution"/>
       <a name="contents">addr/data: 8 8
-0 1 1 4*0 8*1 8 8 0
-0 1 1 10 10 1 4 4
+0 1 1 0 0 20 20 8*1
+8 8 20 20 1 1 10 10
+1 4 4 40 40 40
 </a>
     </comp>
     <comp lib="4" loc="(2290,2740)" name="Register">
@@ -2268,7 +2330,8 @@
       <a name="addrWidth" val="15"/>
       <a name="appearance" val="logisim_evolution"/>
       <a name="contents">addr/data: 15 8
-18 0 fc 249*0 2 0 f0 f0
+2 0 0 0 10 0 0 0
+11 0 fc 241*0 2 0 f0 f0
 10 0 f0 f0 10 0 f f
 13 0 0 80 15 0 1 80
 17 0 0 0 18
@@ -2310,9 +2373,17 @@
     <comp lib="5" loc="(70,2390)" name="Button">
       <a name="label" val="Button_1"/>
     </comp>
+    <wire from="(1000,5120)" to="(1110,5120)"/>
+    <wire from="(1000,5160)" to="(1240,5160)"/>
+    <wire from="(1000,5300)" to="(1020,5300)"/>
+    <wire from="(1000,5340)" to="(1110,5340)"/>
+    <wire from="(1000,5380)" to="(1240,5380)"/>
+    <wire from="(1000,5520)" to="(1020,5520)"/>
     <wire from="(1020,4060)" to="(1050,4060)"/>
     <wire from="(1020,580)" to="(1020,920)"/>
     <wire from="(1020,580)" to="(1030,580)"/>
+    <wire from="(1040,5250)" to="(1130,5250)"/>
+    <wire from="(1040,5470)" to="(1130,5470)"/>
     <wire from="(1050,4020)" to="(1050,4060)"/>
     <wire from="(1080,4100)" to="(1090,4100)"/>
     <wire from="(1090,3390)" to="(1090,3430)"/>
@@ -2333,8 +2404,20 @@
     <wire from="(1090,3990)" to="(1090,4030)"/>
     <wire from="(1090,4060)" to="(1090,4100)"/>
     <wire from="(110,2120)" to="(160,2120)"/>
+    <wire from="(1110,5120)" to="(1110,5210)"/>
+    <wire from="(1110,5210)" to="(1130,5210)"/>
+    <wire from="(1110,5340)" to="(1110,5430)"/>
+    <wire from="(1110,5430)" to="(1130,5430)"/>
     <wire from="(1130,3400)" to="(1420,3400)"/>
+    <wire from="(1190,5230)" to="(1220,5230)"/>
+    <wire from="(1190,5450)" to="(1220,5450)"/>
     <wire from="(120,2670)" to="(130,2670)"/>
+    <wire from="(1240,5160)" to="(1240,5170)"/>
+    <wire from="(1240,5200)" to="(1240,5210)"/>
+    <wire from="(1240,5380)" to="(1240,5390)"/>
+    <wire from="(1240,5420)" to="(1240,5430)"/>
+    <wire from="(1260,5230)" to="(1290,5230)"/>
+    <wire from="(1260,5450)" to="(1290,5450)"/>
     <wire from="(1270,4800)" to="(1300,4800)"/>
     <wire from="(130,3780)" to="(160,3780)"/>
     <wire from="(1300,4060)" to="(1340,4060)"/>
@@ -3619,6 +3702,8 @@
       <a name="incoming" val="8"/>
       <a name="spacing" val="2"/>
     </comp>
+    <comp lib="0" loc="(970,1110)" name="Constant"/>
+    <comp lib="1" loc="(1060,1090)" name="XOR Gate"/>
     <comp lib="1" loc="(130,280)" name="NOT Gate">
       <a name="facing" val="north"/>
     </comp>
@@ -3627,6 +3712,8 @@
     </comp>
     <comp lib="5" loc="(120,320)" name="Button"/>
     <comp lib="5" loc="(250,530)" name="Button"/>
+    <comp lib="5" loc="(970,1070)" name="Button"/>
+    <wire from="(1060,1090)" to="(1140,1090)"/>
     <wire from="(120,320)" to="(130,320)"/>
     <wire from="(130,130)" to="(130,170)"/>
     <wire from="(130,170)" to="(130,210)"/>
@@ -3668,5 +3755,7 @@
     <wire from="(780,770)" to="(780,810)"/>
     <wire from="(780,810)" to="(780,850)"/>
     <wire from="(820,580)" to="(900,580)"/>
+    <wire from="(970,1070)" to="(1000,1070)"/>
+    <wire from="(970,1110)" to="(1000,1110)"/>
   </circuit>
 </project>

@@ -46,6 +46,12 @@
 0x18 JMP <imm16>         -> load imm16 into pc
 0x19 JMP <reg>           -> load reg into pc NOTE: reg needs to be encoded in the second instruction reg
 
+0x20 JEQ <imm16>         -> jump if equals
+0x21 JEQ <reg>           -> jump if equals
+
+0x22 JNQ <imm16>         -> jump if not equals
+0x23 JNQ <reg>           -> jump if not equals
+
 === INSTRUCTION ENCODING ===
 A instruction has a fixed size of 32bit, and can never contain two imm16.
 

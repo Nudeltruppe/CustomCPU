@@ -17,13 +17,16 @@
 #define REG2_TO_ADDRESS_BUS        0b00001000
 #define ALU_COMPARE                0b00010000
 #define ALU_SWAP                   0b00100000
+#define COND_INVERT                0b01000000
+
 
 #define REG1_WRITE                 0b00000001
 #define REG2_WRITE                 0b00000010
 #define PC_COUNT_WRITE             0b00000100
 #define FLAGS_WRITE                0b00001000
 #define MEMORY_WRITE               0b00010000
-
+#define PC_COUNT_LOAD_ZERO         0b00100000
+#define PC_COUNT_LOAD_EQ           0b01000000
 
 
 uint8_t microcode[256][3] = {
@@ -32,8 +35,8 @@ uint8_t microcode[256][3] = {
 	{ IMM16_TO_REG_WRITE_DATA, 0, REG1_WRITE }, // MOV <reg> <imm16>
 	{ 0, 0, 0 }, // OUT <imm16> <reg>
 	{ 0, 0, 0 }, // INP <imm16> <reg>
-	{ 0, 0, 0 }, // JNZ <imm16>
-	{ 0, 0, 0 }, // JNZ <reg>
+	{ 0, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS | COND_INVERT, PC_COUNT_LOAD_ZERO }, // JNZ <imm16>
+	{ REG2_READ, REG2_TO_ADDRESS_BUS | COND_INVERT, PC_COUNT_LOAD_ZERO }, // JNZ <reg>
 	{ REG1_READ | REG2_READ | ALU_ADD, 0, REG1_WRITE }, // ADD <reg> <reg>
 	{ REG1_READ | ALU_ADD, IMM16_TO_REG2_DATA, REG1_WRITE }, // ADD <reg> <imm16>
 	{ REG1_READ | REG2_READ | ALU_SUB, 0, REG1_WRITE }, // SUB <reg> <reg>
@@ -44,8 +47,8 @@ uint8_t microcode[256][3] = {
 	{ REG1_READ, ALU_NOR | IMM16_TO_REG2_DATA, REG1_WRITE }, // NOR <reg> <imm16>
 	{ REG1_READ | REG2_READ, ALU_COMPARE, FLAGS_WRITE }, // CMP <reg> <reg>
 	{ REG1_READ, IMM16_TO_REG2_DATA | ALU_COMPARE, FLAGS_WRITE }, // CMP <reg> <imm16>
-	{ 0, 0, 0 }, // JZR <imm16> 
-	{ 0, 0, 0 }, // JZR <reg>
+	{ 0, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, PC_COUNT_LOAD_ZERO }, // JZR <imm16> 
+	{ REG2_READ, REG2_TO_ADDRESS_BUS, PC_COUNT_LOAD_ZERO }, // JZR <reg>
 	{ DATA_BUS_TO_REG_WRITE_DATA, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, REG1_WRITE }, // LDR <reg> <imm16>
 	{ REG2_READ | DATA_BUS_TO_REG_WRITE_DATA, REG2_TO_ADDRESS_BUS, REG1_WRITE }, // LDR <reg> <reg>
 	{ REG1_READ, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, MEMORY_WRITE }, // WTR <reg> <imm16>
@@ -53,6 +56,10 @@ uint8_t microcode[256][3] = {
 	{ REG1_READ, ALU_SWAP, REG1_WRITE }, // SWP <reg>
 	{ 0, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, PC_COUNT_WRITE }, // JMP <imm16>
 	{ REG2_READ, REG2_TO_ADDRESS_BUS, PC_COUNT_WRITE }, // JMP <reg>
+	{ 0, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, PC_COUNT_LOAD_EQ }, // JEQ <imm16>
+	{ REG2_READ, REG2_TO_ADDRESS_BUS, PC_COUNT_LOAD_EQ }, // JEQ <reg>
+	{ 0, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS | COND_INVERT, PC_COUNT_LOAD_EQ }, // JNQ <imm16>
+	{ REG2_READ, REG2_TO_ADDRESS_BUS | COND_INVERT | PC_COUNT_LOAD_EQ }, // JNQ <reg>
 };
 
 int main() {
