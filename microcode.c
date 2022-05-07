@@ -44,8 +44,8 @@ uint8_t microcode[256][3] = {
 	{ REG1_READ, IMM16_TO_REG2_DATA | ALU_COMPARE, FLAGS_WRITE }, // CMP <reg> <imm16>
 	{ 0, 0, 0 }, // JZR <imm16> 
 	{ 0, 0, 0 }, // JZR <reg>
-	{ 0, 0, 0 }, // LDR <reg> <imm16>
-	{ 0, 0, 0 }, // LDR <reg> <reg>
+	{ DATA_BUS_TO_REG_WRITE_DATA, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, REG1_WRITE }, // LDR <reg> <imm16>
+	{ REG2_READ | DATA_BUS_TO_REG_WRITE_DATA, REG2_TO_ADDRESS_BUS, REG1_WRITE }, // LDR <reg> <reg>
 	{ 0, 0, 0 }, // WTR <reg> <imm16>
 	{ 0, 0, 0 }, // WTR <reg> <reg> 
 	{ 0, 0, 0 }, // SWP <reg>
