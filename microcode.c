@@ -16,6 +16,7 @@
 #define IMM16_TO_REG2_DATA         0b00000100
 #define REG2_TO_ADDRESS_BUS        0b00001000
 #define ALU_COMPARE                0b00010000
+#define ALU_SWAP                   0b00100000
 
 #define REG1_WRITE                 0b00000001
 #define REG2_WRITE                 0b00000010
@@ -49,7 +50,7 @@ uint8_t microcode[256][3] = {
 	{ REG2_READ | DATA_BUS_TO_REG_WRITE_DATA, REG2_TO_ADDRESS_BUS, REG1_WRITE }, // LDR <reg> <reg>
 	{ REG1_READ, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, MEMORY_WRITE }, // WTR <reg> <imm16>
 	{ REG1_READ | REG2_READ, REG2_TO_ADDRESS_BUS, MEMORY_WRITE }, // WTR <reg> <reg> 
-	{ 0, 0, 0 }, // SWP <reg>
+	{ REG1_READ, ALU_SWAP, REG1_WRITE }, // SWP <reg>
 	{ 0, IMM16_TO_REG2_DATA | REG2_TO_ADDRESS_BUS, PC_COUNT_WRITE }, // JMP <imm16>
 	{ REG2_READ, REG2_TO_ADDRESS_BUS, PC_COUNT_WRITE }, // JMP <reg>
 };
