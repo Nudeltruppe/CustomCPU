@@ -1,7 +1,6 @@
 from lexer import TokenTypes
 from lexer import Token
 
-CURRENT_OFFSET = 0
 OPCODE_MAP = {"nop": 0x00, "mov": 0x01, "lod": 0x02, "out": 0x03, "inp": 0x04, 
               "jnz": 0x05, "add": 0x07, "sub": 0x09, "nad": 0x0b, "nor": 0x0d,
               "cmp": 0x0f, "jzr": 0x11, "ldr": 0x13, "wtr": 0x15, "swp": 0x17,
@@ -11,7 +10,8 @@ LABELS = {}
 
 
 class Generator:
-    def __init__(self, tokens) -> None:
+    def __init__(self, tokens, ep=0x0) -> None:
+        self.ep = ep
         self.instruction_counter = 0
         self.final_text = []
         
@@ -266,7 +266,7 @@ class Generator:
                     self.advance()
                     
                     if self.current_token.type == TokenTypes.COLLON:
-                        LABELS.update({potential_label_name: hex(0x00 + int(self.instruction_counter))})
+                        LABELS.update({potential_label_name: hex(self.ep + int(self.instruction_counter))})
                         self.advance()
                     else:
                         raise Exception("Expected \":\" but got \"" + self.current_token.value + "\"")
