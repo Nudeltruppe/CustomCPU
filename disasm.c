@@ -4,8 +4,8 @@
 
 typedef struct {
 	uint8_t opcode;
-	uint8_t reg1: 4;
 	uint8_t reg2: 4;
+	uint8_t reg1: 4;
 	uint16_t imm16;
 } __attribute__((packed)) instruction_t;
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 			instruction.imm16 = __builtin_bswap16(instruction.imm16);
 		}
 
-		printf("0x%lx:\t\t", i * sizeof(instruction_t));
+		printf("0x%lx 0x%x:\t\t", i * sizeof(instruction_t), *(uint32_t*) &instruction);
 
 		switch (instruction.opcode) {
 			case 0x00:
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 				break;
 			
 			case 0x03:
-				printf("OUT 0x%x, %s\n", instruction.imm16, regs[instruction.reg1]);
+				printf("OUT 0x%x, %s\n", instruction.imm16, regs[instruction.reg2]);
 				break;
 
 			case 0x04:
@@ -145,24 +145,24 @@ int main(int argc, char** argv) {
 				printf("JMP %s\n", regs[instruction.reg2]);
 				break;
 			
-			case 0x20:
+			case 0x1a:
 				printf("JEQ 0x%x\n", instruction.imm16);
 				break;
 
-			case 0x21:
+			case 0x1b:
 				printf("JEQ %s\n", regs[instruction.reg2]);
 				break;
 
-			case 0x22:
+			case 0x1c:
 				printf("JNQ 0x%x\n", instruction.imm16);
 				break;
 
-			case 0x23:
+			case 0x1d:
 				printf("JNQ %s\n", regs[instruction.reg2]);
 				break;
 
 			default:
-				printf("UNKNOWN\n");
+				printf("UNKNOWN 0x%x\n", instruction.opcode);
 		}
 	}
 

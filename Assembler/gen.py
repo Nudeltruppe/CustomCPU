@@ -1,3 +1,4 @@
+from psutil import swap_memory
 from lexer import TokenTypes
 from lexer import Token
 
@@ -5,7 +6,7 @@ CURRENT_OFFSET = 0
 OPCODE_MAP = {"nop": 0x00, "mov": 0x01, "lod": 0x02, "out": 0x03, "inp": 0x04, 
               "jnz": 0x05, "add": 0x07, "sub": 0x09, "nad": 0x0b, "nor": 0x0d,
               "cmp": 0x0f, "jzr": 0x11, "ldr": 0x13, "wtr": 0x15, "swp": 0x17,
-              "jmp": 0x18, "jeq": 0x2a, "jnq": 0x2c}
+              "jmp": 0x18, "jeq": 0x1a, "jnq": 0x1c}
 REGISTERS = {"r0": 0x00, "r1": 0x01, "r2": 0x02, "sp": 0x12}
 LABELS = {}
 
@@ -37,24 +38,32 @@ class Generator:
             if self.current_token.type == TokenTypes.BINARY_IMM16:
                 if int(self.current_token.value, base=0) > 65535:
                     raise Exception("Number: " + str(int(self.current_token.value, base=0)) + " is bigger than 2bytes (65535)")
-                return int(self.current_token.value, base=0)
+                i = int(self.current_token.value, base=0)
+                i = (i & 0xFF) << 8 | (i & 0xFF00) >> 8
+                return i
             elif self.current_token.type == TokenTypes.DECIMAL_IMM16:
                 if int(self.current_token.value) > 65535:
                     raise Exception("Number: " + str(int(self.current_token.value, base=0)) + " is bigger than 2bytes (65535)")
-                return int(self.current_token.value)
+                i = int(self.current_token.value)
+                i = (i & 0xFF) << 8 | (i & 0xFF00) >> 8
+                return i
             elif self.current_token.type == TokenTypes.ID:
                 if self.in_check_label:
                     return 0
                 if self.current_token.value in LABELS.keys():
                     if int(LABELS[self.current_token.value], base=16) > 65535:
                         raise Exception("Number: " + str(int(self.current_token.value, base=0)) + " is bigger than 2bytes (65535)")
-                    return int(LABELS[self.current_token.value], base=16)
+                    i = int(LABELS[self.current_token.value], base=16)
+                    i = (i & 0xFF) << 8 | (i & 0xFF00) >> 8
+                    return i
                 else:
                     raise Exception("Invalid label")
             else:
                 if int(self.current_token.value, base=16) > 65535:                    
                     raise Exception("Number: " + str(int(self.current_token.value, base=0)) + " is bigger than 2bytes (65535)")
-                return int(self.current_token.value, base=16)
+                i = int(self.current_token.value, base=16)
+                i = (i & 0xFF) << 8 | (i & 0xFF00) >> 8
+                return i
         else:
             raise Exception("Imm16 was expected but not found")
 
@@ -85,6 +94,8 @@ class Generator:
             raise Exception("Imm8 was expected but not found")
 
     def make_instruction(self, opcode=0, register1="r0", register2="r0", imm16=0):
+        i = "0x{:02x} ".format(opcode) + "{:01x} ".format(REGISTERS[register1]) + "{:01x} ".format(REGISTERS[register2]) + "{:04x} ".format(imm16)
+        print(i)
         return "0x{:02x}".format(opcode) + "{:01x}".format(REGISTERS[register1]) + "{:01x}".format(REGISTERS[register2]) + "{:04x}".format(imm16)
 
     def advance(self):
@@ -143,7 +154,24 @@ class Generator:
                                 raise Exception("expected second argument")
                         else:
                             raise Exception("Expected arguments for lod")
-                    elif opcode_value == 0x03 or opcode_value == 0x04: # out/inp
+                    elif opcode_value == 0x03: # out
+                        imm16 = self.get_imm16()
+                        register = ""
+                        self.advance()
+                        
+                        if self.current_token.type == TokenTypes.COMMA:
+                            self.advance()
+                            
+                            if self.current_token.type == TokenTypes.ID and self.current_token.value in REGISTERS.keys():
+                                register = self.current_token.value
+                                
+                                self.final_text.append(self.make_instruction(opcode=opcode_value, imm16=imm16, register2=register))
+                                self.advance()
+                            else:
+                                raise Exception("Expected register as second argument for out")
+                        else:
+                            raise Exception("Expected second argument in out")
+                    elif opcode_value == 0x04: # inp
                         imm16 = self.get_imm16()
                         register = ""
                         self.advance()
@@ -160,7 +188,7 @@ class Generator:
                                 raise Exception("Expected register as second argument for out")
                         else:
                             raise Exception("Expected second argument in out")
-                    elif opcode_value == 0x05 or opcode_value == 0x11 or opcode_value == 0x18 or opcode_value == 0x2a or opcode_value == 0x2c:                         # jnz
+                    elif opcode_value == 0x05 or opcode_value == 0x11 or opcode_value == 0x18 or opcode_value == 0x1a or opcode_value == 0x1c:                         # jnz
                         if self.current_token.type == TokenTypes.ID and self.current_token.value in REGISTERS:
                             # is a register. Add 0x01
                             opcode_value += 0x01
