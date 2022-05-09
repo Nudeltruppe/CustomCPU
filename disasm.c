@@ -31,6 +31,13 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < size / sizeof(instruction_t); i++) {
 		instruction_t instruction = instructions[i];
 
+		// instruction.imm16 = ntohl(instruction.imm16);
+
+		// swap endianness if necessary
+		if (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) {
+			instruction.imm16 = __builtin_bswap16(instruction.imm16);
+		}
+
 		printf("0x%lx:\t\t", i * sizeof(instruction_t));
 
 		switch (instruction.opcode) {
@@ -47,7 +54,7 @@ int main(int argc, char** argv) {
 				break;
 			
 			case 0x03:
-				printf("OUT 0x%x, %s\n", instruction.imm16, regs[instruction.reg1]);
+				printf("OUT 0x%x, %s\n", instruction.imm16, regs[instruction.reg2]);
 				break;
 
 			case 0x04:
@@ -138,24 +145,24 @@ int main(int argc, char** argv) {
 				printf("JMP %s\n", regs[instruction.reg2]);
 				break;
 			
-			case 0x20:
+			case 0x1a:
 				printf("JEQ 0x%x\n", instruction.imm16);
 				break;
 
-			case 0x21:
+			case 0x1b:
 				printf("JEQ %s\n", regs[instruction.reg2]);
 				break;
 
-			case 0x22:
+			case 0x1c:
 				printf("JNQ 0x%x\n", instruction.imm16);
 				break;
 
-			case 0x23:
+			case 0x1d:
 				printf("JNQ %s\n", regs[instruction.reg2]);
 				break;
 
 			default:
-				printf("UNKNOWN\n");
+				printf("UNKNOWN 0x%x\n", instruction.opcode);
 		}
 	}
 
