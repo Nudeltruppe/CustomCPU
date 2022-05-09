@@ -48,6 +48,7 @@ class Lexer:
         return Token(ret_string, TokenTypes.ID)
     
     def __make_number(self) -> Token:
+        ret_string = ""
         if self.current_char == "0":
             self.advance()
             if self.current_char == "x":
@@ -67,14 +68,13 @@ class Lexer:
                 
                 return Token(ret_string, TokenTypes.BINARY_IMM16)
             else:
-                pass
-        else:
-            ret_string = ""
-            while self.current_char != None and self.current_char in NUMBERS:
-                ret_string += self.current_char
-                self.advance()
+                ret_string = "0"
+
+        while self.current_char != None and self.current_char in NUMBERS:
+            ret_string += self.current_char
+            self.advance()
             
-            return Token(ret_string, TokenTypes.DECIMAL_IMM16)
+        return Token(ret_string, TokenTypes.DECIMAL_IMM16)
    
     def Lex(self):
         self.text = self.text.lower()
