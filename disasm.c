@@ -4,8 +4,8 @@
 
 typedef struct {
 	uint8_t opcode;
-	uint8_t reg2: 4;
 	uint8_t reg1: 4;
+	uint8_t reg2: 4;
 	uint16_t imm16;
 } __attribute__((packed)) instruction_t;
 
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 			instruction.imm16 = __builtin_bswap16(instruction.imm16);
 		}
 
-		printf("0x%lx 0x%x:\t\t", i * sizeof(instruction_t), *(uint32_t*) &instruction);
+		printf("0x%lx:\t\t", i * sizeof(instruction_t));
 
 		switch (instruction.opcode) {
 			case 0x00:

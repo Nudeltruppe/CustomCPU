@@ -94,9 +94,9 @@ class Generator:
             raise Exception("Imm8 was expected but not found")
 
     def make_instruction(self, opcode=0, register1="r0", register2="r0", imm16=0):
-        i = "0x{:02x} ".format(opcode) + "{:01x} ".format(REGISTERS[register1]) + "{:01x} ".format(REGISTERS[register2]) + "{:04x} ".format(imm16)
+        i = "0x{:02x} ".format(opcode) + "{:01x} ".format(REGISTERS[register2]) + "{:01x} ".format(REGISTERS[register1]) + "{:04x} ".format(imm16)
         print(i)
-        return "0x{:02x}".format(opcode) + "{:01x}".format(REGISTERS[register1]) + "{:01x}".format(REGISTERS[register2]) + "{:04x}".format(imm16)
+        return "0x{:02x}".format(opcode) + "{:01x}".format(REGISTERS[register2]) + "{:01x}".format(REGISTERS[register1]) + "{:04x}".format(imm16)
 
     def advance(self):
         self.pos += 1
@@ -254,8 +254,7 @@ class Generator:
                         else:
                             imm16 = self.get_imm16()
                             self.advance()
-                        
-                        self.final_text.append(self.make_instruction(opcode_value, register2, register1, imm16))
+                        self.final_text.append(self.make_instruction(opcode_value, register1, register2, imm16))
                     
                     self.instruction_counter += 0x04
                 elif self.current_token.value == "db": # db
