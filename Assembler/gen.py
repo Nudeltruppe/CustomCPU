@@ -5,7 +5,7 @@ CURRENT_OFFSET = 0
 OPCODE_MAP = {"nop": 0x00, "mov": 0x01, "lod": 0x02, "out": 0x03, "inp": 0x04, 
               "jnz": 0x05, "add": 0x07, "sub": 0x09, "nad": 0x0b, "nor": 0x0d,
               "cmp": 0x0f, "jzr": 0x11, "ldr": 0x13, "wtr": 0x15, "swp": 0x17,
-              "jmp": 0x18, "jeq": 0x20, "jnq": 0x22}
+              "jmp": 0x18, "jeq": 0x2a, "jnq": 0x2c}
 REGISTERS = {"r0": 0x00, "r1": 0x01, "r2": 0x02, "sp": 0x12}
 LABELS = {}
 
@@ -160,7 +160,7 @@ class Generator:
                                 raise Exception("Expected register as second argument for out")
                         else:
                             raise Exception("Expected second argument in out")
-                    elif opcode_value == 0x05 or opcode_value == 0x11 or opcode_value == 0x18 or opcode_value == 0x20 or opcode_value == 0x22:                         # jnz
+                    elif opcode_value == 0x05 or opcode_value == 0x11 or opcode_value == 0x18 or opcode_value == 0x2a or opcode_value == 0x2c:                         # jnz
                         if self.current_token.type == TokenTypes.ID and self.current_token.value in REGISTERS:
                             # is a register. Add 0x01
                             opcode_value += 0x01
