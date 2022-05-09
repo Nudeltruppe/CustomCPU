@@ -1,7 +1,5 @@
-from operator import truediv
-from tokenize import Token
 from lexer import TokenTypes
-
+from lexer import Token
 
 CURRENT_OFFSET = 0
 OPCODE_MAP = {"nop": 0x00, "mov": 0x01, "lod": 0x02, "out": 0x03, "inp": 0x04, 
@@ -231,17 +229,33 @@ class Generator:
                         
                         self.final_text.append(self.make_instruction(opcode_value, register2, register1, imm16))
                     
-                    self.instruction_counter += 1
+                    self.instruction_counter += 0x04
                 elif self.current_token.value == "db": # db
                     self.advance()
                     imm8 = self.get_imm8()
                     self.final_text.append("0x{:02x}".format(imm8))
                     self.advance()
+                    self.instruction_counter += 0x1
                     
-                    while self.current_token.type == TokenTypes.COMMA:
+                    
+                    while self.current_token.type == TokenTypes.COMMA and self.current_token != None:
                         self.advance()
                         imm8 = self.get_imm8()
                         self.final_text.append("0x{:02x}".format(imm8))
+                        self.instruction_counter += 0x1
+                        self.advance()
+                elif self.current_token.value == "dw": #dw
+                    self.advance()
+                    imm16 = self.get_imm16()
+                    self.final_text.append("0x{:04x}".format(imm16))
+                    self.advance()
+                    self.instruction_counter += 0x02
+                    
+                    while self.current_token.type == TokenTypes.COMMA and self.current_token != None:
+                        self.advance()
+                        imm16 = self.get_imm16()
+                        self.final_text.append("0x{:04x}".format(imm16))
+                        self.instruction_counter += 0x02
                         self.advance()
                 elif self.current_token.value in REGISTERS.keys():
                     raise Exception("Unexpected register reference")
@@ -252,7 +266,7 @@ class Generator:
                     self.advance()
                     
                     if self.current_token.type == TokenTypes.COLLON:
-                        LABELS.update({potential_label_name: hex(0x00 + (2 * self.instruction_counter))})
+                        LABELS.update({potential_label_name: hex(0x00 + int(self.instruction_counter))})
                         self.advance()
                     else:
                         raise Exception("Expected \":\" but got \"" + self.current_token.value + "\"")
