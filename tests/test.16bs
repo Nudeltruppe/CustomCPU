@@ -1,0 +1,16 @@
+label:
+    lod r0, 65535 ; max value
+    lod r0, 0x10
+    lod r0, 0b10
+
+    out 0xfff, r0
+    inp 0xfff, r0
+
+    jnz label2
+    jnz r0
+
+    db 255, 255, 255, 0xff, 0b11110000
+
+    mov r0, r1
+label2:
+    nop

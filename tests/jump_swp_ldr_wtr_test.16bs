@@ -1,0 +1,23 @@
+label2:
+    jnz label2
+    jnz r0
+
+    jzr label2
+    jzr r0
+
+    jmp label2
+    jmp r0
+
+    jeq label2
+    jeq r0
+
+    jnq label2
+    jnq r0
+
+    swp r0
+
+    ldr r0, 0xff
+    ldr r0, r1
+
+    wtr r0, 0xff
+    wtr r0, r1

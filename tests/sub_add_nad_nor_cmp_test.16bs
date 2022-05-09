@@ -1,0 +1,14 @@
+add r0, 20
+add r0, r0
+
+sub r0, 20
+sub r0, r0
+
+nad r0, 20
+nad r0, r0
+
+nor r0, 20
+nor r0, r0
+
+cmp r0, 20
+cmp r0, r0
