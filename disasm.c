@@ -31,6 +31,13 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < size / sizeof(instruction_t); i++) {
 		instruction_t instruction = instructions[i];
 
+		// instruction.imm16 = ntohl(instruction.imm16);
+
+		// swap endianness if necessary
+		if (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) {
+			instruction.imm16 = __builtin_bswap16(instruction.imm16);
+		}
+
 		printf("0x%lx:\t\t", i * sizeof(instruction_t));
 
 		switch (instruction.opcode) {
