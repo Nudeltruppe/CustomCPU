@@ -1,0 +1,17 @@
+start:
+	lod r0, 16
+	lod r1, 16
+
+	out 0x0, r1
+
+	add r0, 1
+	sub r0, 1
+
+	cmp r0, r1
+	jeq jmphere
+	out 0xf0, r0
+
+jmphere:
+	lod r2, 0xf0f0
+	out 0xff, r2
+	jmp 0xffff
